@@ -1,0 +1,4 @@
+name: merge code to main branch
+on: push
+     branches:
+      - master
