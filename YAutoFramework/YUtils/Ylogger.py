@@ -152,7 +152,7 @@ class TestLogger(BaseYlogger) :
         :param message: 日志消息
         :return: 被装饰函数的执行结果
 		"""
-		super().global_log()
+		super().global_log(level=level, message=message)
 
 
 # 实例化全局 Logger

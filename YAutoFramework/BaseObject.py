@@ -8,7 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 import YAutoFramework
 from YAutoFramework.YUtils.YTestInfo import YTestInfo
-from YAutoFramework.YUtils.Ylogger import Ylogger
+from YAutoFramework.YUtils.Ylogger import GlobalLogger
 
 
 class BaseObject(object) :
@@ -32,7 +32,7 @@ class BaseObject(object) :
 		self.screenshot = None
 
 	@YTestInfo.Tester('hello')
-	@Ylogger.debug('hello')
+	@GlobalLogger.debug('hello')
 	def wait_till_exist(self, timeout: float = None) -> bool :
 		# 实现等待逻辑
 		if timeout is None :
