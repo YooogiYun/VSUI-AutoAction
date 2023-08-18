@@ -7,8 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 import YAutoFramework
-from YAutoFramework.YUtils.YTestInfo import YTestInfo
-from YAutoFramework.YUtils.Ylogger import GlobalLogger
+from YAutoFramework.YUtils.Logger.Ylogger import GlobalLogger
 
 
 class BaseObject(object) :
@@ -31,7 +30,6 @@ class BaseObject(object) :
 		self.location = None
 		self.screenshot = None
 
-	@YTestInfo.Tester('hello')
 	@GlobalLogger.debug('hello')
 	def wait_till_exist(self, timeout: float = None) -> bool :
 		# 实现等待逻辑
