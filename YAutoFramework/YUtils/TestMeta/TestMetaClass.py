@@ -1,4 +1,5 @@
 import os
+import re
 import time
 from datetime import datetime
 
@@ -76,6 +77,9 @@ class TestMeta(type) :
 			id_ = attrs.get('ID')
 			if not id_ :
 				raise ValueError('ID cannot be empty, ID must be entered.')
+			# 正则匹配类名中的 ID 号
+			if not id_ == (tc := re.search(r'TC\d+', name).group()) :
+				raise ValueError(f'Test Case Class name is not equals ID >>> name:{tc} --- ID:{id_}.')
 			title = attrs.get('Title')
 			desc = attrs.get('Description')
 			tester = attrs.get('Tester', YTester.Unknown)
@@ -127,7 +131,7 @@ class TestTC20018764Example(metaclass=TestMeta) :
 	\nCategory = 'TestPlanPage'
 	\nScript_Status = ScriptStatus.Reviewed and ScriptStatus.Accept
 	"""
-	ID = __name__
+	ID = 'TC20018764'
 	Title = 'Test the main page of Test Plan'
 	Description = '...'
 	Tester = YTester.Admin
