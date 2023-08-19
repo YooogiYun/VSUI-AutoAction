@@ -35,7 +35,7 @@ class ScriptStatus(IntFlag) :
 		return ScriptStatus(self.value & other.value)
 
 
-@GlobalLogger.global_log(message="Test the script status")
+@GlobalLogger.log_decorator(message="Test the script status")
 @pytest.mark.parametrize('value', ScriptStatus.get_binary_sets())
 def test_ScriptStatus(value) :
 	s1, operator_type, s2, v = value

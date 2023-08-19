@@ -1,7 +1,9 @@
+import datetime
 import logging
 import os
 from abc import abstractmethod
 from enum import Enum
+from functools import wraps
 from logging.handlers import RotatingFileHandler
 from os import PathLike
 from typing import AnyStr
@@ -119,7 +121,7 @@ class BaseYlogger :
 		self.log(LogLevel.CRITICAL, message)
 
 	@abstractmethod
-	def global_log(self, level: LogLevel = LogLevel.INFO, message: str = None) :
+	def log_decorator(self, level: LogLevel = LogLevel.INFO, message: str = None) :
 		"""
 		装饰器函数，用于全局日志记录
 
@@ -131,9 +133,13 @@ class BaseYlogger :
 		# 定义装饰器函数
 		def decorator(func) :
 			# 定义包装函数
+			@wraps(func)
 			def wrapper(*args, **kwargs) :
 				try :
 					result = func(*args, **kwargs)  # 执行被装饰的函数
+					self.log(
+							level, f"[{func.__name__}] was called at [{datetime.datetime.now()}] >>> result: [{result}]"
+					)
 					return result
 				except Exception as e :
 					self.error(str(e))  # 记录异常错误
@@ -183,7 +189,7 @@ class TestLogger(BaseYlogger) :
 	def critical(self, message) :
 		super().critical(message)
 
-	def global_log(self, level: LogLevel = LogLevel.INFO, message: str = None) :
+	def log_decorator(self, level: LogLevel = LogLevel.INFO, message: str = None) :
 		"""
 		装饰器函数，用于局部自定义日志记录
 
@@ -191,7 +197,7 @@ class TestLogger(BaseYlogger) :
         :param message: 日志消息
         :return: 被装饰函数的执行结果
 		"""
-		super().global_log(level=level, message=message)
+		super().log_decorator(level=level, message=message)
 
 
 # 实例化全局 Logger
