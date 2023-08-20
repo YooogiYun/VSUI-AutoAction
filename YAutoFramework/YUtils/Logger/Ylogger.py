@@ -87,6 +87,7 @@ class BaseYlogger :
 	@abstractmethod
 	def log(self, level, message) :
 		# 记录信息日志
+		print(f'[{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]-({level.name}) >>> msg:{message}')
 		self.logger.log(level.value, message)
 
 	@abstractmethod
@@ -124,19 +125,26 @@ class BaseYlogger :
 	def log_decorator(self, level: LogLevel = LogLevel.INFO, message: str = None) :
 		"""
 		装饰器函数，用于全局日志记录
-
-		:param level: 日志级别，默认为 LogLevel.STEP
+		使用格式化字符串，将函数的参数和返回值记录到日志中
+		@log_decorator(level=LogLevel.DEBUG, message="点击 {self._locator} 元素是否可见，button_type={button_type}, click_times={click_times}")
+		def click(self, button_type: str = "left", click_times: int = 1) -> bool:
+		:param level: 日志级别，默认为 LogLevel.INFO
 		:param message: 日志消息
-		:return: 被装饰函数的执行结果
 		"""
 
-		# 定义装饰器函数
 		def decorator(func) :
-			# 定义包装函数
 			@wraps(func)
-			def wrapper(*args, **kwargs) :
+			def wrapper(self, *args, **kwargs) :
+				# 将形参转换为字符串
+				args_str = ", ".join(str(arg) for arg in args)
+				kwargs_str = ", ".join(f"{key}={value}" for key, value in kwargs.items())
+				params = ", ".join(filter(None, [args_str, kwargs_str]))
+
+				# 构造最终的日志消息
+				formatted_message = message.format(params)
 				try :
-					result = func(*args, **kwargs)  # 执行被装饰的函数
+					# 执行原始函数
+					result = func(*args, **kwargs)
 					self.log(
 							level, f"[{func.__name__}] was called at [{datetime.datetime.now()}] >>> result: [{result}]"
 					)
@@ -144,8 +152,8 @@ class BaseYlogger :
 				except Exception as e :
 					self.error(str(e))  # 记录异常错误
 				finally :
-					# log_level_value = level.value  # 获取日志级别的整数值
-					self.log(level, message)  # 记录日志
+					# 记录日志
+					self.log(level, formatted_message)
 
 			return wrapper
 

@@ -17,7 +17,7 @@ class Screenshoter :
 		"""
 		初始化一个 屏幕截图工具，该工具会将截图保存到指定的文件夹中，文件夹位置由参数 file_folder_full_path+folder_name+screenshot_name.png 指定。
 
-		:param driver:  selenium web driver
+		:param driver:  selenium web _driver
 		:param logger:  logger
 		:param folder_name:  截图文件夹名
 		:param screenshot_name:  屏幕截图文件名
@@ -42,6 +42,6 @@ class Screenshoter :
 		"""
 		try :
 			self.driver.save_screenshot(self.file_full_path)
-			self.logger.info(message=f"截图已保存为 {self.file_full_path}")
+			self.logger.info(message=f"截图已保存到 {self.file_full_path}")
 		except Exception as e :
-			self.logger.error(message=f"截图失败：{str(e)}")
+			self.logger.error(message=f"截图失败。错误原因：{str(e)}")

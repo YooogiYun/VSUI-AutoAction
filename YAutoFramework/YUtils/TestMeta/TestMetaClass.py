@@ -88,7 +88,7 @@ class TestMeta(type) :
 			if not driver_ :
 				raise ValueError('Driver cannot be empty, WebDriver must be entered.')
 			if not isinstance(driver_, Base_WebDriver) :
-				raise ValueError(f'Driver is not supported. >>> current driver:{driver_}.')
+				raise ValueError(f'Driver is not supported. >>> current _driver:{driver_}.')
 
 			title = attrs.get('Title')
 			desc = attrs.get('Description')

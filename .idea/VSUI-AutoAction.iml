@@ -6,6 +6,10 @@
       <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/YUtils/.pytest_cache/v" />
       <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/YUtils/logs" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/Dataout/TC20018764/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/Dataout/TC20018764/screenshots" />
+      <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/YUtils/TestInfos/.pytest_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/YAutoFramework/YUtils/TestMeta/.pytest_cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
