@@ -1,5 +1,6 @@
 # typing.Optional[float]
 # import typing
+
 import selenium
 from selenium.common import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -12,10 +13,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 import YAutoFramework
 from YAutoFramework.YUtils.Logger.Ylogger import GlobalLogger, LogLevel
-from YAutoFramework.YUtils.POM.BaseObjectFuncs import BaseObjectFunctions
-from YAutoFramework.YUtils.POM.BaseObjectFuncs import BaseSelectObjectFunctions
-from YAutoFramework.YUtils.POM.BaseObjectFuncs import BaseTextObjectFunctions
-from YAutoFramework.YUtils.POM.BaseObjectFuncs import BaseWebElementFunctions
+from YAutoFramework.YUtils.POM.Base.BaseObjectFuncs import BaseObjectFunctions
+from YAutoFramework.YUtils.POM.Base.BaseObjectFuncs import BaseSelectObjectFunctions
+from YAutoFramework.YUtils.POM.Base.BaseObjectFuncs import BaseTextObjectFunctions
+from YAutoFramework.YUtils.POM.Base.BaseObjectFuncs import BaseWebElementFunctions
 
 MouseButtonDict = {
 	"left"    : MouseButton.LEFT,
@@ -47,7 +48,9 @@ def parse_attributes(element_attributes) :
 	return attributes
 
 
-class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectFunctions, BaseWebElementFunctions) :
+class BaseObjectClass(
+		BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectFunctions, BaseWebElementFunctions
+) :
 	"""
 	POM 基础对象
 	"""
@@ -67,8 +70,8 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 		self._poll_frequency = YAutoFramework.poll_frequency
 		self._parent = parent
 		self._childrens = []
-		# self._is_displayed = self._driver.find_element(*self._locator).is_displayed
-		# self._is_enabled = self._driver.find_element(*self._locator).is_enabled
+		self.is_displayed = self.exists
+		self.is_enabled = self.__is_enabled
 		self.text = self.get_text
 		self.tag = self.get_tag
 		self.attributes = self.get_attributes
@@ -77,6 +80,13 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 		self.title = self._driver.title
 		self.size = self.get_size
 		self.location = self.get_location
+
+	def __is_enabled(self) :
+		"""
+		判断元素是否可用
+		:return: True if enabled else False
+		"""
+		return self.wait_till_enabled(timeout=1)
 
 	# @GlobalLogger.log_decorator(level=LogLevel.DEBUG, message=f"判断 {self._locator} 元素是否存在")
 	def exists(self) -> bool :
@@ -95,19 +105,19 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 
 	# @GlobalLogger.log_decorator(
 	# 		level=LogLevel.DEBUG,
-	# 		message=f"点击 {self._locator} 元素是否可见 >>> button_type: {button_type} >>> click_times: {click_times} 次"
+	# 		message=f"点击 {self._locator} 元素是否可见 >>> button_type: {button_type} >>> click_count: {click_count} 次"
 	# )
-	def click(self, button_type: str = "left", click_times: int = 1, interval: int = 125) -> bool :
+	def click(self, button_type: str = "left", click_count: int = 1, interval: int = 125) -> bool :
 		"""
 		点击元素
 		:param button_type: 鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
-		:param click_times: 点击次数，默认为 1
+		:param click_count: 点击次数，默认为 1
 		:param interval: 点击间隔时间，默认为 125ms
 		:return: True if click success else False
 		"""
 		GlobalLogger.log(
 				level=LogLevel.DEBUG,
-				message=f"点击 {self._locator} 元素是否可见 >>> button_type: {button_type} >>> click_times: {click_times} 次"
+				message=f"点击 {self._locator} 元素是否可见 >>> button_type: {button_type} >>> click_count: {click_count} 次"
 		)
 		try :
 			actions = ActionChains(self._driver)  # 鼠标操作对象
@@ -118,7 +128,7 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 				raise ValueError(f"Invalid button_type: {button_type}")
 
 			actions.move_to_element(to_element=element)
-			for _ in range(click_times) :
+			for _ in range(click_count) :
 				(actions.w3c_actions.pointer_action
 				 .pointer_down(button_)
 				 .pointer_up(button_)
@@ -131,18 +141,70 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 			GlobalLogger.info(f"点击 {self._locator} 元素成功")
 			return True
 
+	def double_click(
+			self, button_type: str = "left", click_count: int = 1, douleclick_span = 100, interval: int = 125
+	) -> bool :
+		"""
+		双击元素
+		:param button_type:  鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
+		:param click_count:  点击次数，默认为 1
+		:param douleclick_span:  双击间隔时间，默认为 100ms
+		:param interval:   点击间隔时间，默认为 125ms
+		:return:
+		"""
+		GlobalLogger.log(
+				level=LogLevel.DEBUG,
+				message=f"双击 {self._locator} 元素是否可见 >>> button_type: {button_type} >>> click_count: {click_count} 次"
+		)
+		try :
+			actions = ActionChains(self._driver)  # 鼠标操作对象
+			element = self._driver.find_element(*self._locator)  # 元素
+			button_ = MouseButtonDict[button_type]  # 鼠标按键类型
+			douleclick_span = (douleclick_span if douleclick_span > 0 else 100) / 1000.0  # 双击间隔时间，单位：s
+			interval = (interval if interval > 0 else 125) / 1000.0  # 间隔时间，单位：s
+			if button_ is None :
+				raise ValueError(f"Invalid button_type: {button_type}")
+
+			actions.move_to_element(to_element=element)
+			for _ in range(click_count) :
+				(actions.w3c_actions.pointer_action
+				 .pointer_down(button_)
+				 .pointer_up(button_)
+				 .pause(douleclick_span)
+				 .pointer_down(button_)
+				 .pointer_up(button_)
+				 .pause(interval)
+				 )
+			actions.perform()
+		except Exception as e :
+			GlobalLogger.error(f"双击 {self._locator} 元素失败 >>> error: {str(e)}")
+			return False
+		else :
+			GlobalLogger.info(f"双击 {self._locator} 元素成功")
+			return True
+
+	def right_click(self, button_type: str = "right", click_count: int = 1, interval: int = 125) -> bool :
+		"""
+		右击元素
+		:param button_type: 鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
+		:param click_count:  点击次数，默认为 1
+		:param interval:  点击间隔时间，默认为 125ms
+		:return:
+		"""
+		return self.click(button_type=button_type, click_count=click_count, interval=interval)
+
 	# @GlobalLogger.log_decorator(
 	# 		level=LogLevel.DEBUG,
 	# 		message="长按元素 {self._locator} >>> duration_time: {duration_time} ms >>> button_type: {button_type} >>> "
-	# 		        "click_times: {click_times} 次"
+	# 		        "click_count: {click_count} 次"
 	# )
 	def long_click(
-			self, button_type: str = "left", click_times: int = 1, duration_time: int = 250, interval: int = 125
-			) -> bool :
+			self, button_type: str = "left", click_count: int = 1, duration_time: int = 250, interval: int = 125
+	) -> bool :
 		"""
 		长按元素
 		:param button_type:  鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
-		:param click_times:  点击次数，默认为 1
+		:param click_count:  点击次数，默认为 1
 		:param duration_time: 长按时间，默认 250ms，单位：ms
 		:param interval:     点击间隔时间，默认为 125ms
 		:return : True if click success else False:
@@ -150,7 +212,7 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 		GlobalLogger.log(
 				level=LogLevel.DEBUG,
 				message=f"长按元素 {self._locator} >>> duration_time: {duration_time} ms >>> button_type: {button_type} >>> "
-				        "click_times: {click_times} 次"
+				        "click_count: {click_count} 次"
 		)
 		try :
 			actions = ActionChains(self._driver)
@@ -162,7 +224,7 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 				raise ValueError(f"Invalid button_type: {button_type}")
 
 			actions.move_to_element(to_element=element)
-			for _ in range(click_times) :
+			for _ in range(click_count) :
 				(actions.w3c_actions.pointer_action
 				 .pointer_down(button_)
 				 .pause(duration_time)

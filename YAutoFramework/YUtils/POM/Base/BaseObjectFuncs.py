@@ -30,6 +30,33 @@ class BaseObjectFunctions :
 		pass
 
 	@abc.abstractmethod
+	def double_click(
+			self, button_type: str = "left", click_count: int = 1, douleclick_span = 100, interval: int = 125
+	) -> bool :
+		"""
+		双击元素
+		:param button_type:  鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
+		:param click_count:  点击次数，默认为 1
+		:param douleclick_span:  双击间隔时间，默认为 100ms
+		:param interval:   点击间隔时间，默认为 125ms
+		:return:
+		"""
+		# 实现双击逻辑
+		pass
+
+	@abc.abstractmethod
+	def right_click(self, button_type: str = "right", click_count: int = 1, interval: int = 125) -> bool :
+		"""
+		右击元素
+		:param button_type:  鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 right
+		:param click_count:  点击次数，默认为 1
+		:param interval:   点击间隔时间，默认为 125ms
+		:return:
+		"""
+		# 实现右击逻辑
+		pass
+
+	@abc.abstractmethod
 	def long_click(
 			self, button_type: str = "left", click_times: int = 1, duration_time: int = 250, interval: int = 125
 	) -> bool :

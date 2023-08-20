@@ -125,23 +125,27 @@ class BaseYlogger :
 	def log_decorator(self, level: LogLevel = LogLevel.INFO, message: str = None) :
 		"""
 		装饰器函数，用于全局日志记录
-		使用格式化字符串，将函数的参数和返回值记录到日志中
-		@log_decorator(level=LogLevel.DEBUG, message="点击 {self._locator} 元素是否可见，button_type={button_type}, click_times={click_times}")
-		def click(self, button_type: str = "left", click_times: int = 1) -> bool:
+		\n使用格式化字符串，将函数的参数和返回值记录到日志中
+		\n直接用 { } 占位符，将参数和返回值的值记录到日志中，不需要用 f-string 修饰 message
+		\n!!! 仅支持函数参数，不支持 self 参数
+		\n@log_decorator(level=LogLevel.DEBUG, message="点击元素是否可见，button_type={button_type}, click_count={click_count}")
+		\ndef click(self, button_type: str = "left", click_count: int = 1) -> bool:
 		:param level: 日志级别，默认为 LogLevel.INFO
 		:param message: 日志消息
 		"""
 
 		def decorator(func) :
 			@wraps(func)
-			def wrapper(self, *args, **kwargs) :
+			def wrapper(*args, **kwargs) :
 				# 将形参转换为字符串
-				args_str = ", ".join(str(arg) for arg in args)
-				kwargs_str = ", ".join(f"{key}={value}" for key, value in kwargs.items())
-				params = ", ".join(filter(None, [args_str, kwargs_str]))
+				# args_name = func.__code__.co_varnames # 获取函数的参数名，例如：('self', 'button_type', 'click_count')
+				# args_str = args # 获取函数的参数值 例如：(<__main__.Button object at 0x0000020F7F7F4E80>, 'left', 1)
+
+				args_match = dict(zip(func.__code__.co_varnames, args))
+				merged_args_dict = { **args_match, **kwargs }  # 合并参数
 
 				# 构造最终的日志消息
-				formatted_message = message.format(params)
+				formatted_message = message.format(**merged_args_dict)
 				try :
 					# 执行原始函数
 					result = func(*args, **kwargs)

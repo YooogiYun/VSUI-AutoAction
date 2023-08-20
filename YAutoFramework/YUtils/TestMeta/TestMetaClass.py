@@ -3,7 +3,6 @@ import re
 import time
 from datetime import datetime
 
-from selenium.webdriver.chrome.webdriver import WebDriver as chrome_WebDriver
 from selenium.webdriver.remote.webdriver import WebDriver as Base_WebDriver
 
 import YAutoFramework
@@ -28,7 +27,7 @@ class TestMeta(type) :
 	"""
 	作为 Test Case class 的 Template
 	自定义 Test Class 元类，用于在创建测试用例类时绑定其属性
-	\nWebDriver =  selenium.webdriver.chrome.webdriver() -- 必填项
+	\nDriver =  selenium.webdriver.chrome.webdriver() -- 必填项
 	\nID = 'TC20018764' --- 必填项
 	\nTitle = 'Test Case Title'
 	\nDescription = 'Test Case '
@@ -137,68 +136,3 @@ class TestMeta(type) :
 		msg = f"Test Case:[{name}] created >>> ID:[{cls_obj.id}] >>> Title: [{cls_obj.title}]"
 		GlobalLogger.debug(message=msg)
 		return cls_obj
-
-
-class TestTC20018764Example(metaclass=TestMeta) :
-	"""定义测试用例类，属性在元类中绑定
-	\nID 为必填项
-	\nTitle = 'Test Case Title'
-	\nDescription = 'Test Case '
-	\nTester = YTester.Admin
-	\nCategory = 'TestPlanPage'
-	\nScript_Status = ScriptStatus.Reviewed and ScriptStatus.Accept
-	"""
-	ID = 'TC20018764'
-	Title = 'Test the main page of Test Plan'
-	Description = '...'
-	Tester = YTester.Admin
-	Category = 'TestPlanPage'
-	Script_Status = ScriptStatus.Coding and ScriptStatus.InReview
-	Driver = chrome_WebDriver()
-
-	# @pytest.fixture(scope="function")
-	# def fixture_setup_teardown(self) :
-	# 	# 测试下面测试方法运行前的 SetUp
-	# 	self.Log.step(
-	# 			"""1.
-	# 			# 在每个测试用例之前执行一些操作
-	# 			# yield 之前的代码在每个测试用例之前执行
-	# 			# yield 关键字之前的部分相当于 setup 操作
-	# 			# 它可以进行一些准备工作，例如设置测试环境、初始化资源等
-	# 			"""
-	# 	)
-	# 	result = 'the result you want to pass to the test method'  # 控制权交给测试用例函数
-	# 	yield result
-	# 	self.Log.step(
-	# 			"""2.
-	#             # yield 之后的代码在每个测试用例之后执行
-	#             # yield 关键字之后的部分相当于 teardown 操作
-	#             # 它可以进行一些清理工作，例如释放资源、恢复环境等
-	#             # 在每个测试用例之后执行一些操作
-	# 			"""
-	# 	)
-
-	def test_method(self) :
-		# 测试逻辑
-		print(self.ID)  # TC20018764
-		print(self.Title)  # Test the main page of Test Plan
-		self.Driver.get(url="https://www.baidu.com")
-		self.Log.step(f"current {self.ID} and {self.Title}")
-		assert type(" ") == str  # True
-		self.Screenshot.take_screenshot()
-		print("after assert")
-
-# def test_method(self, fixture_setup_teardown) :
-# 	# 测试逻辑
-# 	print(self.ID)  # TC20018764
-# 	print(self.Title)  # Test the main page of Test Plan
-# 	self.Driver.get(url="https://www.baidu.com")
-# 	self.Log.step(f"current {self.ID} and {self.Title}")
-# 	assert type(fixture_setup_teardown) == str  # True
-# 	self.Screenshoter.take_screenshot()
-# 	print("after assert")
-
-#
-# if __name__ == '__main__' :
-# 	a = TestTC20018764Example()
-# 	pytest.main()

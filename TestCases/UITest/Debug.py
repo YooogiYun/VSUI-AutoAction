@@ -1,16 +1,44 @@
-import selenium.webdriver
-from selenium.webdriver.common.by import By
+from YAutoFramework.YUtils.Logger.Ylogger import GlobalLogger, LogLevel
 
-from YAutoFramework.YUtils.POM.BaseObject import BaseObject
 
 # class TestTC20018764(metaclass=TestMeta) :
 # 	ID = 'TC234234'
 
-driver = selenium.webdriver.Chrome()
-driver.get(r"http://cps-test.bchrt.com/")
-target = BaseObject(driver=driver, locator=(By.CSS_SELECTOR, 'button#start'))
-target.wait_till_exists(timeout=10)
-target.click(click_times=10, interval=125)
+class ADecorator :
+	def __init__(self, func) :
+		self.func = func
+
+	def __call__(self, *args, **kwargs) :
+		print("装饰器开始")
+		a = self.func
+		print(a)
+		self.func(*args, **kwargs)
+		print("装饰器结束")
+
+
+class BtestOne :
+	def __init__(self) :
+		self.nametitle = "BtestOne"
+
+	@ADecorator
+	@GlobalLogger.log_decorator(LogLevel.STEP, "步骤 1,nametitle: name: {name}, age: {age}, time: {time}")
+	def methodtes_toperator(self, name: str, age: int, time: float = 1.0) :
+		print(name)
+		print(age)
+		print(time)
+
+
+#
+# driver = selenium.webdriver.Chrome()
+# # driver.get(r"http://cps-test.bchrt.com/")
+# driver.get(r"https://www.baidu.com/")
+# target = BaseObjectClass(driver=driver, locator=(By.CSS_SELECTOR, 'button#start'))
+# target.wait_till_exists(timeout=10)
+# target.click(click_count=10, interval=125)
+# print(target.is_enabled())
+# print(target.is_displayed())
+
+BtestOne().methodtes_toperator(age=18, name="张三", time=1.0)
 input()
 
 # MouseButtonDict = {
@@ -48,4 +76,3 @@ input()
 # # actions.w3c_actions.pointer_action.click(element, MouseButton.RIGHT)
 # # actions.w3c_actions.perform()
 # actions.pause(10)
-input()
