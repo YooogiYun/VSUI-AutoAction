@@ -7,10 +7,12 @@ from YAutoFramework.YUtils.POM.BaseObject import BaseObject
 # 	ID = 'TC234234'
 
 driver = selenium.webdriver.Chrome()
-driver.get(r"http://cps-test.bchrt.com/")
+# driver.get(r"http://cps-test.bchrt.com/")
+driver.get(r"https://www.baidu.com/")
 target = BaseObject(driver=driver, locator=(By.CSS_SELECTOR, 'button#start'))
 target.wait_till_exists(timeout=10)
 target.click(click_times=10, interval=125)
+print(target.is_enabled())
 input()
 
 # MouseButtonDict = {

@@ -67,8 +67,8 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 		self._poll_frequency = YAutoFramework.poll_frequency
 		self._parent = parent
 		self._childrens = []
-		# self._is_displayed = self._driver.find_element(*self._locator).is_displayed
-		# self._is_enabled = self._driver.find_element(*self._locator).is_enabled
+		self.is_displayed = self.exists
+		self.is_enabled = self.__is_enabled
 		self.text = self.get_text
 		self.tag = self.get_tag
 		self.attributes = self.get_attributes
@@ -77,6 +77,13 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 		self.title = self._driver.title
 		self.size = self.get_size
 		self.location = self.get_location
+
+	def __is_enabled(self) :
+		"""
+		判断元素是否可用
+		:return: True if enabled else False
+		"""
+		return self.wait_till_enabled(timeout=1)
 
 	# @GlobalLogger.log_decorator(level=LogLevel.DEBUG, message=f"判断 {self._locator} 元素是否存在")
 	def exists(self) -> bool :
@@ -138,7 +145,7 @@ class BaseObject(BaseObjectFunctions, BaseTextObjectFunctions, BaseSelectObjectF
 	# )
 	def long_click(
 			self, button_type: str = "left", click_times: int = 1, duration_time: int = 250, interval: int = 125
-			) -> bool :
+	) -> bool :
 		"""
 		长按元素
 		:param button_type:  鼠标按键类型，可选值：left、right、middle,forward,back, 默认为 left
