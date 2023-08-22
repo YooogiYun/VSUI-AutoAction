@@ -3,13 +3,13 @@ import time
 import allure
 from selenium.webdriver import Chrome
 
-from YAutoFramework.YUtils.POM.UIDefinations.Example import MuYuQueryPage
+from YAutoFramework.YUtils.POM.UIDefinations.XiaoHongshu import XiaoHongShuPage
 from YAutoFramework.YUtils.TestInfos.StatusINFO import ScriptStatus
 from YAutoFramework.YUtils.TestInfos.YTestInfo import YTester
 from YAutoFramework.YUtils.TestMeta.TestMetaClass import TestMeta
 
 
-class TestTC100(metaclass=TestMeta) :
+class TestTC123456(metaclass=TestMeta) :
 	"""
 	用例编号 TC1008687
 	用例名称 用例名称
@@ -19,7 +19,7 @@ class TestTC100(metaclass=TestMeta) :
 	预期结果 预期结果
 	"""
 	Driver = Chrome()
-	ID = "TC100"
+	ID = locals()["__qualname__"].replace("Test", "")
 	Title = 'Test Case Title'
 	Description = 'Test Case '
 	Tester = YTester.Admin
@@ -32,12 +32,13 @@ class TestTC100(metaclass=TestMeta) :
 		测试用例的主体
 		"""
 		allure.step("打开目标页面")
-		with MuYuQueryPage(self.Driver).open() as MuYuPage :
-			print(MuYuPage.title)
-			allure.step("点击测试元素 50 次")
-			MuYuPage.ClickToTestElement.click(click_count=20, interval=10)
-			print(MuYuPage.title)
-			time.sleep(10)
+		xiaohongshuPage = XiaoHongShuPage(self.Driver).open()
+		print(xiaohongshuPage.title)
+		allure.step("点击测试元素 50 次")
+		xiaohongshuPage.CloseButton.wait_for_ready()
+		xiaohongshuPage.CloseButton.click()
+		print(xiaohongshuPage.title)
+		time.sleep(10)
 
 # MuYuPage = MuYuQueryPage(self.Driver).open()
 # print(MuYuPage.title)

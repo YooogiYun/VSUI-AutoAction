@@ -355,7 +355,7 @@ class BaseObjectClass(
 		:return:  True if element ready else False
 		"""
 		GlobalLogger.log(
-				loglevel=LogLevel.DEBUG, message=f"等待 {self._locator} 元素可见、可用 >>> _timeout: {timeout}s"
+			level=LogLevel.DEBUG, message=f"等待 {self._locator} 元素可见、可用 >>> _timeout: {timeout}s"
 		)
 		# 实现等待逻辑
 		if timeout is None :

@@ -136,3 +136,21 @@ class TestMeta(type) :
 		msg = f"Test Case:[{name}] created >>> ID:[{cls_obj.id}] >>> Title: [{cls_obj.title}]"
 		GlobalLogger.debug(message=msg)
 		return cls_obj
+
+	@classmethod
+	def setup_class(cls) :
+		print('\n === 初始化 - 类 ===', "class name:", cls.__name__)
+		cls.__clean_up_output_folder()
+
+	@classmethod
+	def __clean_up_output_folder(cls) :
+		"""
+		清理 dataout 文件夹
+		:return:
+		"""
+		print('\n === 清理 - dataout 文件夹 ===')
+		pass
+
+	@classmethod
+	def teardown_class(cls) :
+		print('\n === 清除 - 类 ===', "class name:", cls.__name__)
