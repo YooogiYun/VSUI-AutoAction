@@ -34,6 +34,7 @@ class TestTC100(metaclass=TestMeta) :
 			print(MuYuPage.title)
 			allure.step("点击测试元素 50 次")
 			MuYuPage.ClickToTestElement.click(click_count=50)
+			print(MuYuPage.title)
 
 # MuYuPage = MuYuQueryPage(self.Driver).open()
 # print(MuYuPage.title)
