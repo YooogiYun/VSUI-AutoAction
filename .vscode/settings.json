@@ -1,3 +1,22 @@
 {
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.enablePytestSupport": true,
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}"
+    },
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "env"
+    ]
 }
+// Q: ModuleNotFoundError happening in Vscode but not in Pycharm
+//https://stackoverflow.com/questions/71594141/modulenotfounderror-happening-in-vscode-but-not-in-pycharm
+// Answer:
+//  This is because in the Pycharm it defaults selected Add content roots to PYTHONPATH(Edit Configurations). 
+//  This means the parent folder path of main and lib folder will be added to the PYTHONPATH. 
+//  While VSCode does not take it by default.
+//   You can add this to the settings.json file to achieve this in the VSCode:
+//   "terminal.integrated.env.windows": {
+//     "PYTHONPATH": "${workspaceFolder}"
+//   },
